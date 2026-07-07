@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Моя библиотека</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Библиотека">
+<meta name="theme-color" content="#f7e6ea">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf2f3;--bg2:#f5eaec;--paper:#fdf9f9;--ink:#2b2226;--ink-soft:#4a4048;
+    --muted:#98878f;--muted2:#c0adb4;
+    --line:#ecdfe1;--line2:#e2ced4;--line3:#f2e7ea;
+    --gold:#c17a95;--gold-d:#a1546f;--gold-l:#e9c4d1;--gold-hi:#db86a4;--gold-ink:#8a4763;
+    --accent:#a1546f;--wine:#bb3f63;
+    --sh-1:0 1px 2px rgba(150,70,100,.05);--sh-2:0 10px 30px -12px rgba(150,70,100,.28);
+    --r:14px;--ease:cubic-bezier(.22,.61,.36,1);
+    --serif-d:'Cormorant Garamond','Georgia',serif;--serif-b:'Cormorant Garamond','Georgia',serif;
+    --sans:'Inter',system-ui,-apple-system,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{background:radial-gradient(120% 80% at 50% -10%,#fdf6f7 0%,var(--bg) 42%,var(--bg2) 100%) fixed;color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;min-height:100vh;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) calc(120px + env(safe-area-inset-bottom)) env(safe-area-inset-left)}
+  body::before{content:"";position:fixed;top:0;left:0;right:0;height:3px;z-index:20;background:linear-gradient(90deg,var(--gold-d),var(--gold-hi) 35%,#f2b6cd 50%,var(--gold-hi) 65%,var(--gold-d));box-shadow:0 1px 4px rgba(175,80,115,.35)}
+  .ribbon{position:fixed;top:0;right:clamp(16px,5vw,40px);width:24px;height:56px;z-index:19;background:linear-gradient(180deg,var(--gold-hi),var(--gold) 55%,var(--gold-d));clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);box-shadow:0 3px 8px rgba(150,70,100,.34);animation:ribbonDrop .7s var(--ease) both}
+  .ribbon::after{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:1px;height:26px;background:rgba(255,255,255,.4)}
+  @keyframes ribbonDrop{from{transform:translateY(-56px)}to{transform:translateY(0)}}
+  .wrap{max-width:760px;margin:0 auto;padding:0 clamp(20px,5vw,32px)}
+
+  header.top{text-align:center;padding:50px 0 4px;animation:rise .8s var(--ease) both}
+  .emblem{color:var(--gold);display:flex;justify-content:center;margin-bottom:14px}
+  .emblem svg{width:52px;height:34px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+  .eyebrow{font-size:11px;letter-spacing:5.5px;text-transform:uppercase;color:var(--gold-d);font-weight:600;text-indent:5.5px}
+  header.top h1{font-family:var(--serif-d);font-weight:600;font-size:clamp(46px,12vw,66px);letter-spacing:.5px;line-height:1;margin:16px 0 6px;color:var(--ink)}
+  .sub{font-family:var(--serif-d);font-style:italic;font-weight:500;font-size:clamp(19px,5vw,23px);color:var(--muted)}
+  .flourish{display:flex;align-items:center;justify-content:center;gap:18px;margin:24px auto 6px;max-width:360px;color:var(--gold-hi)}
+  .flourish::before,.flourish::after{content:"";height:1px;flex:1}
+  .flourish::before{background:linear-gradient(90deg,transparent,var(--line2))}
+  .flourish::after{background:linear-gradient(90deg,var(--line2),transparent)}
+  .flourish span{font-size:14px;letter-spacing:4px}
+  .intro{text-align:center;font-family:var(--serif-d);font-style:italic;font-size:17px;color:var(--muted);max-width:420px;margin:8px auto 0;line-height:1.45}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);border-radius:var(--r);overflow:hidden;margin:34px 0 24px;box-shadow:var(--sh-1);animation:rise .8s .06s var(--ease) both}
+  .stat{background:var(--paper);padding:18px 12px 16px;text-align:center;transition:background .3s}
+  .stat:hover{background:#fdf8fa}
+  .stat .num{font-family:var(--mono);font-weight:500;font-size:clamp(20px,6vw,25px);color:var(--gold-ink);letter-spacing:-.5px;font-feature-settings:"tnum"}
+  .stat .num::after{content:"";display:block;width:16px;height:2px;background:var(--gold-hi);border-radius:2px;margin:8px auto 0;opacity:.5}
+  .stat .lbl{font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);margin-top:6px}
+
+  .sectionmark{text-align:center;color:var(--gold-hi);letter-spacing:11px;font-size:12px;margin:22px 0 8px;text-indent:11px}
+
+  .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 6px;position:relative;z-index:30;animation:rise .8s .1s var(--ease) both}
+  .search{position:relative;flex:1 1 200px;min-width:160px}
+  .search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+  .search input[type=search]{width:100%;background:var(--paper);border:1px solid var(--line2);border-radius:11px;padding:11px 14px 11px 38px;font-family:var(--sans);font-size:13.5px;color:var(--ink);outline:none;transition:border-color .25s,box-shadow .25s}
+  .search input[type=search]::placeholder{color:var(--muted2)}
+  .search input[type=search]:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(193,122,148,.16)}
+  .toolbar select{appearance:none;-webkit-appearance:none;background:var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 3l3 3 3-3' stroke='%23a1546f' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 13px center;border:1px solid var(--line2);border-radius:11px;padding:11px 32px 11px 14px;font-family:var(--sans);font-size:12.5px;font-weight:500;color:var(--ink-soft);cursor:pointer;outline:none;transition:border-color .25s}
+  .toolbar select:focus{border-color:var(--gold)}
+  .btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);background:var(--paper);color:var(--ink-soft);font-family:var(--sans);font-size:12.5px;font-weight:600;padding:11px 15px;border-radius:11px;cursor:pointer;letter-spacing:.2px;transition:transform .18s var(--ease),box-shadow .25s,border-color .25s,background .25s,color .2s}
+  .btn:hover{transform:translateY(-1px);box-shadow:var(--sh-1);border-color:var(--gold-l)}
+  .btn:active{transform:translateY(0)}
+  .btn.ghost{background:var(--paper);color:var(--ink-soft)}
+  .btn.primary{background:linear-gradient(180deg,var(--gold),var(--gold-d));border-color:var(--gold-d);color:#fff8fb;box-shadow:0 4px 12px -3px rgba(161,84,111,.5);text-shadow:0 1px 0 rgba(110,50,75,.3)}
+  .btn.primary:hover{box-shadow:0 7px 18px -4px rgba(161,84,111,.55)}
+  .btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(193,122,148,.28)}
+  .btn.dirty{box-shadow:0 0 0 3px rgba(217,134,164,.35)}
+  .more-wrap{display:inline-block}
+  .more-toggle{font-size:16px;line-height:1;padding:11px 14px}
+  .more-menu{display:none;position:absolute;top:calc(100% + 8px);right:0;z-index:50;background:var(--paper);border:1px solid var(--line2);border-radius:var(--r);box-shadow:0 12px 30px -10px rgba(150,70,100,.3);padding:8px;flex-direction:column;gap:8px;min-width:220px}
+  .more-menu.open{display:flex}
+  .more-menu .btn{width:100%;justify-content:flex-start}
+
+  .add-panel{background:var(--paper);border:1px solid var(--line2);border-radius:var(--r);padding:22px;margin:14px 0 4px;display:none;box-shadow:var(--sh-1)}
+  .add-panel.open{display:block}
+  .add-panel h3{font-family:var(--serif-d);font-size:24px;font-weight:600;margin-bottom:14px}
+  .fields{display:flex;flex-wrap:wrap;gap:10px}
+  .add-panel input[type=text],.edit-form input[type=text]{flex:1;min-width:170px;font-family:var(--sans);font-size:14px;padding:11px 15px;border:1px solid var(--line2);border-radius:10px;background:#fff;color:var(--ink);outline:none}
+  .add-panel input[type=text]:focus,.edit-form input[type=text]:focus{border-color:var(--gold)}
+  label.chk{display:flex;align-items:center;gap:6px;font-family:var(--sans);font-size:14px;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .acts{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+
+  #list{margin-top:2px}
+  .book{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:18px;padding:17px 8px;border-bottom:1px solid var(--line);position:relative;border-radius:9px;transition:background .28s var(--ease)}
+  .book::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:2px;border-radius:2px;background:var(--gold);opacity:0;transform:scaleY(.4);transition:opacity .28s,transform .28s var(--ease)}
+  .book:first-child{border-top:1px solid var(--line)}
+  .book:hover{background:linear-gradient(90deg,rgba(217,134,164,.06),transparent 70%)}
+  .book:hover::before{opacity:1;transform:scaleY(1)}
+  .book .num-badge{font-family:var(--mono);font-weight:500;font-size:11.5px;color:var(--gold);text-align:center;letter-spacing:-.5px}
+  .book .meta{min-width:0}
+  .book .title{font-family:var(--serif-d);font-weight:600;font-size:clamp(21px,5.5vw,25px);letter-spacing:.2px;line-height:1.12;color:var(--ink)}
+  .book .lang-tag{display:inline-flex;align-items:center;font-family:var(--sans);font-weight:600;font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold-d);background:none;border:1px solid var(--gold-l);border-radius:4px;padding:2px 5px;margin-left:9px;vertical-align:middle;transform:translateY(-2px)}
+  .book .lang-tag.manual{color:#fff8fb;background:var(--gold);border-color:var(--gold-d);transform:none}
+  .book .author{font-size:10px;letter-spacing:2.4px;text-transform:uppercase;color:var(--muted);margin-top:7px}
+  .rate{min-width:0}
+  .rate .row{display:flex;align-items:center;gap:12px;justify-content:flex-end}
+  .rate .prog{width:78px;height:5px;border-radius:5px;background:var(--line2);position:relative;overflow:hidden;flex:none}
+  .rate .prog i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;transition:width .3s var(--ease),background .3s}
+  .rate .score{font-family:var(--mono);font-weight:500;font-size:16.5px;min-width:48px;text-align:right;color:var(--gold-ink);font-feature-settings:"tnum"}
+  .rate .score.unset{color:var(--muted2);font-family:var(--serif-d);font-style:italic;font-size:18px}
+  .rate .score .m{color:var(--muted2);font-size:12px}
+  .stars{display:none}
+  .icon-btn{width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border:none;background:none;color:var(--muted2);cursor:pointer;border-radius:8px;font-size:15px;line-height:1;font-family:var(--sans);transition:color .2s,background .2s,transform .18s var(--ease)}
+  .icon-btn:hover{color:var(--gold-d);background:rgba(217,134,164,.12)}
+  .icon-btn.del:hover{color:var(--wine);background:rgba(187,63,99,.1)}
+  .icon-btn:active{transform:scale(.9)}
+  .icon-btn:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(193,122,148,.4)}
+  .book.editing{grid-template-columns:1fr;gap:10px}
+  .edit-form{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:2px 0}
+  .edit-form .acts{margin-top:0}
+  .af-range{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--gc,var(--gold)) var(--p,0%),var(--line2) var(--p,0%));outline:none;cursor:pointer}
+  .af-range::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--gold-d);border:3px solid var(--paper);box-shadow:0 1px 5px rgba(150,70,100,.5);cursor:pointer}
+  .af-range::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--gold-d);border:3px solid var(--paper);box-shadow:0 1px 5px rgba(150,70,100,.5);cursor:pointer}
+  .rate-edit{display:flex;align-items:center;gap:13px;flex:1 1 100%;min-width:220px;padding:4px 2px}
+  .rate-edit .re-lbl{font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .rate-edit .af-range{flex:1}
+  .rate-edit .val{font-family:var(--mono);font-weight:500;font-size:16px;color:var(--gold-ink);min-width:52px;text-align:right}
+  .rate-edit .val.unset{font-family:var(--serif-d);font-style:italic;color:var(--muted2)}
+  .rate-edit .val .m{color:var(--muted2);font-size:12px}
+
+  .empty{text-align:center;color:var(--muted);font-family:var(--serif-d);font-style:italic;font-size:20px;padding:50px 20px}
+  footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:28px;font-family:var(--sans);line-height:1.7}
+  footer .reset{color:var(--gold-d);cursor:pointer;text-decoration:underline}
+
+  .toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--ink);color:#f7eef0;font-family:var(--sans);font-size:14px;padding:11px 20px;border-radius:30px;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.25s;z-index:70}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .bottombar{position:fixed;left:0;right:0;bottom:0;z-index:18;display:flex;justify-content:center;padding:14px 12px calc(16px + env(safe-area-inset-bottom));background:linear-gradient(0deg,var(--bg) 52%,rgba(250,242,243,.85) 78%,transparent);pointer-events:none}
+  .bottombar .seg{display:flex;gap:4px;background:var(--paper);border:1px solid var(--line2);border-radius:32px;padding:5px;box-shadow:var(--sh-2);pointer-events:auto}
+  .navbtn{display:flex;align-items:center;gap:8px;background:none;border:none;color:var(--muted);cursor:pointer;padding:10px 22px;border-radius:26px;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;transition:color .25s,background .3s var(--ease);white-space:nowrap}
+  .navbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .navbtn.active{background:linear-gradient(180deg,var(--gold),var(--gold-d));color:#fff8fb;box-shadow:0 3px 9px -3px rgba(161,84,111,.6)}
+  .navbtn:not(.active):hover{color:var(--gold-d)}
+  .navbtn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(193,122,148,.3)}
+
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  @media(max-width:560px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .book{grid-template-columns:28px 1fr;gap:2px 12px}
+    .rate{grid-column:1 / -1;margin-top:12px}
+    .rate .row{justify-content:space-between;gap:14px;width:100%}
+    .rate .prog{flex:1}
+    .rate .score{font-size:19px;min-width:56px}
+    .rate .score.unset{font-size:19px}
+    .rate .score .m{font-size:13px}
+    .navbtn{padding:10px 16px;letter-spacing:1px}
+    .ribbon{right:16px}
+  }
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="ribbon"></div>
+<div class="wrap">
+  <header class="top">
+    <div class="emblem"><svg viewBox="0 0 48 32"><path d="M24 7c-3-2-8-3-12-3H4v22h8c4 0 9 1 12 3"/><path d="M24 7c3-2 8-3 12-3h8v22h-8c-4 0-9 1-12 3"/><path d="M24 7v25"/></svg></div>
+    <div class="eyebrow">Личная библиотека</div>
+    <h1>Что я прочитал</h1>
+    <div class="sub">собрание прочитанного</div>
+    <div class="flourish"><span>✦&nbsp;&nbsp;❦&nbsp;&nbsp;✦</span></div>
+    <p class="intro">Каждый корешок — глава пройденного пути. Здесь я храню оценки, авторов и тихую радость прочитанного.</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="statTotal">78</div><div class="lbl">Всего книг</div></div>
+    <div class="stat"><div class="num" id="statRated">75</div><div class="lbl">Оценено</div></div>
+    <div class="stat"><div class="num" id="statAvg">7.1</div><div class="lbl">Средний балл</div></div>
+    <div class="stat"><div class="num" id="statAuthors">40</div><div class="lbl">Авторов</div></div>
+  </div>
+
+  <div class="toolbar">
+    <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg><input type="search" id="search" placeholder="Поиск по названию или автору…"></label>
+    <select id="sort">
+      <option value="default">По порядку</option>
+      <option value="title" selected>По названию</option>
+      <option value="author">По автору</option>
+      <option value="rating-desc">Оценка ↓</option>
+      <option value="rating-asc">Оценка ↑</option>
+    </select>
+    <select id="sortAuthors" style="display:none">
+      <option value="name">По имени</option>
+      <option value="rating-desc">Оценка ↓</option>
+      <option value="rating-asc">Оценка ↑</option>
+    </select>
+    <button class="btn primary" id="addToggle">+ Добавить</button>
+    <button class="btn ghost" id="syncToggle">☁ Синхронизация<span id="syncBadge" style="display:none;color:#3a7d3a;margin-left:6px">●</span></button>
+    <div class="more-wrap">
+      <button class="btn ghost more-toggle" id="moreToggle" title="Ещё" aria-label="Ещё">⋯</button>
+      <div class="more-menu" id="moreMenu">
+        <button class="btn primary" id="saveBtn">💾 Сохранить в файл</button>
+        <button class="btn ghost" id="exportBtn">⬇ Скачать копию</button>
+        <button class="btn ghost" id="importBtn">⬆ Загрузить копию</button>
+      </div>
+    </div>
+    <input type="file" id="importFile" accept=".html,.json" style="display:none">
+  </div>
+
+  <div class="add-panel" id="addPanel">
+    <h3>Новая книга</h3>
+    <div class="fields">
+      <input type="text" id="newTitle" placeholder="Название произведения">
+      <input type="text" id="newAuthor" placeholder="Автор">
+      <label class="chk"><input type="checkbox" id="newEng"> на английском</label>
+    </div>
+    <div class="acts">
+      <button class="btn" id="saveBook">Добавить</button>
+      <button class="btn ghost" id="cancelBook">Отмена</button>
+    </div>
+  </div>
+
+  <div class="add-panel" id="syncPanel">
+    <h3>Синхронизация между устройствами</h3>
+    <div id="syncDisconnected">
+      <p style="margin-bottom:12px;color:var(--ink2)">Вставь ключ доступа GitHub — оценки будут автоматически синхронизироваться между айфоном и Маком. Ключ создаётся один раз и хранится только в этом браузере, в облако уходят лишь оценки.</p>
+      <div class="fields">
+        <input type="text" id="syncTokenInput" placeholder="ghp_… — ключ GitHub" autocomplete="off" autocapitalize="off" spellcheck="false">
+      </div>
+      <div class="acts">
+        <button class="btn" id="syncConnectBtn">Подключить</button>
+        <button class="btn ghost" id="syncCancelBtn">Закрыть</button>
+      </div>
+    </div>
+    <div id="syncConnectedBox" style="display:none">
+      <p style="margin-bottom:12px">✓ Синхронизация подключена. Оценки уходят в облако автоматически и подтягиваются при открытии на другом устройстве.</p>
+      <div class="acts">
+        <button class="btn" id="syncNowBtn">Синхронизировать сейчас</button>
+        <button class="btn ghost" id="syncDisconnectBtn">Отключить</button>
+        <button class="btn ghost" id="syncCloseBtn">Закрыть</button>
+      </div>
+    </div>
+    <div id="syncStatus" style="margin-top:12px;font-family:system-ui,sans-serif;font-size:13px;color:var(--muted)"></div>
+  </div>
+
+  <div class="sectionmark">❧ &nbsp; ❦ &nbsp; ❧</div>
+
+  <div id="list"></div>
+
+  <footer>
+    Оценки и правки сохраняются в этом браузере автоматически.<br>
+    Подключи «☁ Синхронизацию», чтобы оценки сами переносились между айфоном и Маком.<br>
+    <span class="reset" id="resetAll">Сбросить все оценки и вернуть исходный список</span>
+  </footer>
+</div>
+
+<div class="bottombar">
+  <div class="seg">
+    <button class="navbtn active" id="navBooks">
+      <svg viewBox="0 0 24 24"><path d="M12 6c-1.7-1.1-4.2-1.6-6.5-1.6V17c2.3 0 4.8.5 6.5 1.6 1.7-1.1 4.2-1.6 6.5-1.6V4.4c-2.3 0-4.8.5-6.5 1.6z"/><path d="M12 6v12.6"/></svg>
+      Произведения
+    </button>
+    <button class="navbtn" id="navAuthors">
+      <svg viewBox="0 0 24 24"><path d="M5 19l1.8-4.8L16 5a1.9 1.9 0 0 1 2.7 2.7L9.8 17z"/><path d="M14 7l3 3"/><path d="M4.5 19.5h6"/></svg>
+      Писатели
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---- Вшитые данные (обновляются при «Сохранить в файл» / «Скачать копию») ----
+const BAKED = {"ratings":{},"custom":[],"deleted":[],"edits":{},"authorEdits":{},"updated":0}; // __BAKED_MARKER__
+
+// ---- Исходный список ----
+const SEED = [];
+
+const LS_KEY = "readingListV1";
+const SYNC_TOKEN_KEY = "readingListSyncToken";
+const SYNC_GIST_KEY  = "readingListGistId";
+const PUBLIC_GIST_ID = ""; // публичное чтение библиотеки без ключа
+
+function lsGet(){ try{ return localStorage.getItem(LS_KEY); }catch(e){ return null; } }
+function lsSet(v){ try{ localStorage.setItem(LS_KEY, v); }catch(e){} }
+function lsDel(){ try{ localStorage.removeItem(LS_KEY); }catch(e){} }
+function lsRaw(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function lsGetRaw(k){ try{ return localStorage.getItem(k)||""; }catch(e){ return ""; } }
+function lsDelKey(k){ try{ localStorage.removeItem(k); }catch(e){} }
+
+function idOf(b){ return (b.t+"|"+b.a).toLowerCase().replace(/\s+/g,"_"); }
+function normalize(s){
+  s = s || {};
+  return {
+    ratings: s.ratings || {},
+    custom:  s.custom  || [],
+    deleted: s.deleted || [],
+    edits:   s.edits   || {},
+    updated: s.updated || 0,
+    mig1:    s.mig1    || false,
+    authorEdits: s.authorEdits || {}
+  };
+}
+function loadState(){ try{ return JSON.parse(lsGet()) || null; }catch(e){ return null; } }
+function saveState(s){ s.updated = Date.now(); lsSet(JSON.stringify(s)); markDirty(true); schedulePush(); }
+function fmtDate(ts){ try{ return new Date(ts).toLocaleString("ru-RU",{day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"}); }catch(e){ return ""; } }
+
+// ---- Загрузка состояния + защита от потери данных ----
+let state = loadState();
+const baked = normalize(BAKED);
+if(!state){
+  state = normalize(baked);
+  lsSet(JSON.stringify(state));
+}else{
+  state = normalize(state);
+  if(baked.updated && baked.updated > (state.updated||0)+1000){
+    if(confirm("Этот файл содержит более свежую версию (от "+fmtDate(baked.updated)+"), чем сохранённая в браузере.\n\nЗагрузить данные из файла? Текущие данные в браузере будут заменены.")){
+      state = normalize(baked);
+      lsSet(JSON.stringify(state));
+    }
+  }
+}
+
+// Разовая чистка дублей, совпавших с основным списком.
+if(!state.mig1){
+  const seedIds = new Set(SEED.map(b=>idOf(b)));
+  state.custom  = state.custom.filter(b=>!seedIds.has(b.id));
+  state.deleted = state.deleted.filter(id=>!seedIds.has(id));
+  state.mig1 = true;
+  lsSet(JSON.stringify(state));
+}
+
+let editing = null;
+let dirty = false;
+let view = "books";
+
+function allBooks(){
+  const seed = SEED.map(b=>({...b, id:idOf(b), custom:false}));
+  const seedIds = new Set(seed.map(b=>b.id));
+  const custom = state.custom.filter(b=>!seedIds.has(b.id)).map(b=>({...b, custom:true}));
+  let all = [...seed, ...custom].filter(b=>!state.deleted.includes(b.id));
+  return all.map(b=>{
+    const e = state.edits[b.id];
+    return e ? {...b, t:e.t, a:e.a, eng:e.eng} : b;
+  });
+}
+
+const listEl = document.getElementById("list");
+const searchEl = document.getElementById("search");
+const sortEl = document.getElementById("sort");
+
+function starStr(n){ if(!n) return ""; const full = Math.round(n/2); return "★".repeat(full)+"☆".repeat(5-full); }
+function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function goldTier(r){ if(!r) return "var(--line2)"; if(r>=8) return "var(--gold-d)"; if(r>=5) return "var(--gold)"; return "var(--gold-l)"; }
+
+// Режим владельца: правки и добавление доступны только когда введён ключ синхронизации.
+function isOwner(){ return !!syncToken; }
+function updateOwnerUI(){
+  const own = isOwner();
+  document.body.classList.toggle('owner', own);
+  const mw = document.querySelector('.more-wrap'); if(mw) mw.style.display = own ? '' : 'none';
+  const reset = document.getElementById('resetAll'); if(reset) reset.style.display = own ? '' : 'none';
+  const at = document.getElementById('addToggle'); if(at) at.style.display = (own && view==='books') ? '' : 'none';
+  if(!own){
+    const ap=document.getElementById('addPanel'); if(ap) ap.classList.remove('open');
+    const mm=document.getElementById('moreMenu'); if(mm) mm.classList.remove('open');
+    if(editing!==null){ editing=null; }
+  }
+}
+
+function markDirty(v){
+  dirty = v;
+  const b = document.getElementById("saveBtn");
+  if(b) b.classList.toggle("dirty", v);
+}
+
+function render(){
+  if(view==="authors"){ renderAuthors(); return; }
+  const own = isOwner();
+  const q = searchEl.value.trim().toLowerCase();
+  let books = allBooks();
+  if(q){ books = books.filter(b=> (b.t+" "+b.a).toLowerCase().includes(q)); }
+
+  const sort = sortEl.value;
+  if(sort==="title") books.sort((a,b)=>a.t.localeCompare(b.t,"ru"));
+  else if(sort==="author") books.sort((a,b)=>a.a.localeCompare(b.a,"ru")||a.t.localeCompare(b.t,"ru"));
+  else if(sort==="rating-desc") books.sort((a,b)=>(state.ratings[b.id]||0)-(state.ratings[a.id]||0));
+  else if(sort==="rating-asc") books.sort((a,b)=>(state.ratings[a.id]||999)-(state.ratings[b.id]||999));
+
+  listEl.innerHTML = "";
+  if(books.length===0){ listEl.innerHTML = '<div class="empty">Ничего не найдено.</div>'; }
+
+  books.forEach((b,i)=>{
+    const r = state.ratings[b.id] || 0;
+    const card = document.createElement("div");
+    card.className = "book";
+    if(editing===b.id && own){
+      card.classList.add("editing");
+      const pct = (r/10)*100;
+      card.innerHTML =
+        '<div class="edit-form">'+
+          '<input type="text" class="ef-title" value="'+escapeHtml(b.t)+'" placeholder="Название">'+
+          '<input type="text" class="ef-author" value="'+escapeHtml(b.a)+'" placeholder="Автор">'+
+          '<label class="chk"><input type="checkbox" class="ef-eng" '+(b.eng?'checked':'')+'> на английском</label>'+
+          '<label class="rate-edit"><span class="re-lbl">Оценка</span>'+
+            '<input type="range" min="0" max="10" step="1" class="af-range ef-rate" value="'+r+'" style="--p:'+pct+'%;--gc:'+goldTier(r)+'">'+
+            '<span class="val ef-rate-val '+(r?'':'unset')+'">'+(r? r+'<span class="m">/10</span>' : 'нет')+'</span>'+
+          '</label>'+
+          '<div class="acts">'+
+            '<button class="btn ef-save">Сохранить</button>'+
+            '<button class="btn ghost ef-cancel">Отмена</button>'+
+          '</div>'+
+        '</div>';
+    }else{
+      const pct = (r/10)*100;
+      card.innerHTML =
+        '<div class="num-badge">'+(i+1)+'</div>'+
+        '<div class="meta">'+
+          '<div class="title">'+escapeHtml(b.t)+(b.eng?'<span class="lang-tag">ENG</span>':'')+'</div>'+
+          '<div class="author">'+escapeHtml(b.a)+'</div>'+
+        '</div>'+
+        '<div class="rate">'+
+          '<div class="row">'+
+            '<div class="prog"><i style="width:'+pct+'%;background:'+goldTier(r)+'"></i></div>'+
+            '<span class="score '+(r?'set':'unset')+'">'+(r? r+'<span class="m">/10</span>' : 'нет')+'</span>'+
+            (own?
+              '<button class="icon-btn edit" title="Изменить" data-edit="'+escapeHtml(b.id)+'">✎</button>'+
+              '<button class="icon-btn del" title="Удалить" data-del="'+escapeHtml(b.id)+'">×</button>' : '')+
+          '</div>'+
+        '</div>';
+    }
+    listEl.appendChild(card);
+  });
+
+  bindActions();
+  updateStats();
+}
+
+function bindActions(){
+  listEl.querySelectorAll('.ef-rate').forEach(inp=>{
+    inp.addEventListener('input', e=>{
+      const v = +e.target.value;
+      e.target.style.setProperty('--p', (v/10*100)+'%');
+      e.target.style.setProperty('--gc', goldTier(v));
+      const lab = e.target.parentElement.querySelector('.ef-rate-val');
+      if(lab){ lab.className = 'val ef-rate-val '+(v?'':'unset'); lab.innerHTML = v? v+'<span class="m">/10</span>' : 'нет'; }
+    });
+  });
+  listEl.querySelectorAll('[data-edit]').forEach(btn=>{
+    btn.addEventListener('click', e=>{ editing = e.currentTarget.dataset.edit; render();
+      const f = listEl.querySelector('.ef-title'); if(f) f.focus(); });
+  });
+  listEl.querySelectorAll('.ef-save').forEach(btn=> btn.addEventListener('click', saveEdit));
+  listEl.querySelectorAll('.ef-cancel').forEach(btn=> btn.addEventListener('click', ()=>{ editing=null; render(); }));
+  listEl.querySelectorAll('[data-del]').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      const id = e.currentTarget.dataset.del;
+      if(confirm("Удалить эту книгу из списка?")){
+        state.custom = state.custom.filter(b=>b.id!==id);
+        if(!state.deleted.includes(id)) state.deleted.push(id);
+        delete state.ratings[id];
+        delete state.edits[id];
+        saveState(state);
+        render();
+        toast("Книга удалена");
+      }
+    });
+  });
+}
+
+function saveEdit(){
+  const form = listEl.querySelector('.edit-form');
+  if(!form || !editing) return;
+  const t = form.querySelector('.ef-title').value.trim();
+  const a = form.querySelector('.ef-author').value.trim();
+  const eng = form.querySelector('.ef-eng').checked;
+  if(!t){ alert("Введите название"); return; }
+  const id = editing;
+  const rEl = form.querySelector('.ef-rate');
+  if(rEl){ const rv = Math.round(+rEl.value); if(rv) state.ratings[id]=rv; else delete state.ratings[id]; }
+  const custom = state.custom.find(x=>x.id===id);
+  if(custom){ custom.t=t; custom.a=a||"—"; custom.eng=eng; }
+  else{ state.edits[id] = {t, a:a||"—", eng}; }
+  editing = null;
+  saveState(state);
+  render();
+  toast("Изменения сохранены");
+}
+
+function updateStats(){
+  const books = allBooks();
+  const rated = books.filter(b=>state.ratings[b.id]).map(b=>state.ratings[b.id]);
+  document.getElementById("statTotal").textContent = books.length;
+  document.getElementById("statRated").textContent = rated.length;
+  document.getElementById("statAvg").textContent = rated.length ? (rated.reduce((x,y)=>x+y,0)/rated.length).toFixed(1) : "—";
+  document.getElementById("statAuthors").textContent = new Set(books.map(b=>b.a)).size;
+}
+
+// ---- Рейтинг писателей ----
+function worksWord(n){ n=Math.abs(n)%100; const n1=n%10; if(n>10&&n<20) return "произведений"; if(n1>1&&n1<5) return "произведения"; if(n1===1) return "произведение"; return "произведений"; }
+
+function authorStats(){
+  const books = allBooks();
+  const map = {};
+  books.forEach(b=>{
+    if(!map[b.a]) map[b.a]={sum:0,rated:0,works:0};
+    map[b.a].works++;
+    const r = state.ratings[b.id];
+    if(r){ map[b.a].sum+=r; map[b.a].rated++; }
+  });
+  return Object.keys(map).map(a=>{
+    const v=map[a];
+    const auto = v.rated? v.sum/v.rated : 0;
+    const ov = state.authorEdits[a];
+    const hasOverride = (ov!==undefined && ov!==null);
+    return {author:a, works:v.works, rated:v.rated, auto:auto, rating: hasOverride? ov : auto, hasOverride:hasOverride};
+  });
+}
+
+function renderAuthors(){
+  const own = isOwner();
+  const q = searchEl.value.trim().toLowerCase();
+  let authors = authorStats();
+  if(q) authors = authors.filter(a=> a.author.toLowerCase().includes(q));
+  const sa = (document.getElementById("sortAuthors")||{}).value || "name";
+  if(sa==="rating-desc") authors.sort((x,y)=> (y.rating||0)-(x.rating||0) || x.author.localeCompare(y.author,"ru"));
+  else if(sa==="rating-asc") authors.sort((x,y)=> (x.rating||0)-(y.rating||0) || x.author.localeCompare(y.author,"ru"));
+  else authors.sort((x,y)=> x.author.localeCompare(y.author,"ru"));
+  listEl.innerHTML = "";
+  if(authors.length===0){ listEl.innerHTML='<div class="empty">Ничего не найдено.</div>'; }
+  authors.forEach((a,i)=>{
+    const card=document.createElement("div"); card.className="book";
+    if(editing==="A:"+a.author && own){
+      card.classList.add("editing");
+      const val = (a.hasOverride? a.rating : a.auto)||0;
+      const pct = (val/10)*100;
+      card.innerHTML =
+        '<div class="edit-form">'+
+          '<div style="flex:1 1 100%;font-family:var(--serif-d);font-size:20px">'+escapeHtml(a.author)+'</div>'+
+          '<label class="rate-edit"><span class="re-lbl">Оценка автора</span>'+
+            '<input type="range" min="0" max="10" step="0.1" class="af-range" value="'+val+'" style="--p:'+pct+'%;--gc:'+goldTier(Math.round(val))+'">'+
+            '<span class="af-val val '+(val?'':'unset')+'">'+val.toFixed(1)+'<span class="m">/10</span></span>'+
+          '</label>'+
+          '<div class="acts">'+
+            '<button class="btn af-save">Сохранить</button>'+
+            '<button class="btn ghost af-auto">↺ Авто</button>'+
+            '<button class="btn ghost af-cancel">Отмена</button>'+
+          '</div>'+
+        '</div>';
+    }else{
+      const rTxt = a.rated? a.rating.toFixed(1)+'<span class="m">/10</span>' : 'нет';
+      const pct = a.rated? (a.rating/10)*100 : 0;
+      card.innerHTML =
+        '<div class="num-badge">'+(i+1)+'</div>'+
+        '<div class="meta"><div class="title">'+escapeHtml(a.author)+(a.hasOverride?' <span class="lang-tag manual">вручную</span>':'')+'</div>'+
+        '<div class="author">'+a.works+' '+worksWord(a.works)+' · оценено '+a.rated+'</div></div>'+
+        '<div class="rate"><div class="row">'+
+        '<div class="prog"><i style="width:'+pct+'%;background:'+goldTier(Math.round(a.rating))+'"></i></div>'+
+        '<span class="score '+(a.rated?'set':'unset')+'">'+rTxt+'</span>'+
+        (own? '<button class="icon-btn edit" title="Изменить оценку автора" data-aedit="'+escapeHtml(a.author)+'">✎</button>' : '')+
+        '</div></div>';
+    }
+    listEl.appendChild(card);
+  });
+  bindAuthorActions();
+}
+
+function bindAuthorActions(){
+  listEl.querySelectorAll('[data-aedit]').forEach(btn=> btn.addEventListener('click', e=>{ editing="A:"+e.currentTarget.dataset.aedit; render(); }));
+  listEl.querySelectorAll('.af-range').forEach(rng=> rng.addEventListener('input', ()=>{
+    const val=+rng.value;
+    rng.style.setProperty('--p',(val/10*100)+'%');
+    rng.style.setProperty('--gc',goldTier(Math.round(val)));
+    const v=listEl.querySelector('.af-val'); if(v){ v.className='af-val val '+(val?'':'unset'); v.innerHTML=val.toFixed(1)+'<span class="m">/10</span>'; }
+  }));
+  listEl.querySelectorAll('.af-save').forEach(btn=> btn.addEventListener('click', ()=>{
+    const a=editing.slice(2); const rng=listEl.querySelector('.af-range');
+    state.authorEdits[a]= Math.round((+rng.value)*10)/10;
+    editing=null; saveState(state); render(); toast("Оценка автора сохранена");
+  }));
+  listEl.querySelectorAll('.af-auto').forEach(btn=> btn.addEventListener('click', ()=>{
+    const a=editing.slice(2); delete state.authorEdits[a];
+    editing=null; saveState(state); render(); toast("Возвращено к среднему");
+  }));
+  listEl.querySelectorAll('.af-cancel').forEach(btn=> btn.addEventListener('click', ()=>{ editing=null; render(); }));
+}
+
+function setView(v){
+  view=v; editing=null;
+  document.getElementById("navBooks").classList.toggle("active", v==="books");
+  document.getElementById("navAuthors").classList.toggle("active", v==="authors");
+  updateOwnerUI();
+  document.getElementById("sort").style.display = v==="books" ? "" : "none";
+  document.getElementById("sortAuthors").style.display = v==="authors" ? "" : "none";
+  searchEl.value="";
+  searchEl.placeholder = v==="books" ? "Поиск по названию или автору…" : "Поиск по автору…";
+  window.scrollTo({top:0,behavior:"smooth"});
+  render();
+}
+document.getElementById("navBooks").addEventListener("click", ()=> setView("books"));
+document.getElementById("navAuthors").addEventListener("click", ()=> setView("authors"));
+
+// ---- Панель добавления ----
+const addPanel = document.getElementById("addPanel");
+document.getElementById("addToggle").addEventListener("click",()=>{
+  addPanel.classList.toggle("open");
+  if(addPanel.classList.contains("open")) document.getElementById("newTitle").focus();
+});
+document.getElementById("cancelBook").addEventListener("click",()=>addPanel.classList.remove("open"));
+document.getElementById("saveBook").addEventListener("click",()=>{
+  const t = document.getElementById("newTitle").value.trim();
+  const a = document.getElementById("newAuthor").value.trim();
+  const eng = document.getElementById("newEng").checked;
+  if(!t){ alert("Введите название"); return; }
+  const b = {t, a:a||"—", eng};
+  b.id = idOf(b);
+  if(allBooks().some(x=>x.id===b.id)) b.id += "_"+Date.now();
+  state.custom.push(b);
+  state.deleted = state.deleted.filter(d=>d!==b.id);
+  saveState(state);
+  document.getElementById("newTitle").value="";
+  document.getElementById("newAuthor").value="";
+  document.getElementById("newEng").checked=false;
+  addPanel.classList.remove("open");
+  sortEl.value="default";
+  render();
+  toast("Книга добавлена");
+});
+
+document.getElementById("resetAll").addEventListener("click",()=>{
+  if(confirm("Сбросить все оценки, правки и добавленные книги? Список вернётся к исходному.")){
+    lsDel();
+    state = normalize({});
+    state.mig1 = true;
+    editing = null;
+    render();
+    toast("Список сброшен");
+  }
+});
+
+// ---- Сохранение / экспорт / импорт ----
+let fileHandle = null;
+
+function currentBaked(){
+  return {ratings:state.ratings, custom:state.custom, deleted:state.deleted, edits:state.edits, authorEdits:state.authorEdits||{}, updated:Date.now()};
+}
+function buildHtml(){
+  const wasEditing = editing; editing = null; render();
+  let html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+  const bakedStr = "const BAKED = " + JSON.stringify(currentBaked()) + "; // __BAKED_MARKER__";
+  html = html.replace(/const BAKED = [\s\S]*?; \/\/ __BAKED_MARKER__/, ()=>bakedStr);
+  editing = wasEditing;
+  return html;
+}
+function downloadHtml(html){
+  const blob = new Blob([html], {type:"text/html;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "моя-библиотека.html"; a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function saveToFile(){
+  const html = buildHtml();
+  if(window.showSaveFilePicker){
+    try{
+      if(!fileHandle){
+        fileHandle = await window.showSaveFilePicker({
+          suggestedName:"моя-библиотека.html",
+          types:[{description:"HTML",accept:{"text/html":[".html"]}}]
+        });
+      }
+      const w = await fileHandle.createWritable();
+      await w.write(html); await w.close();
+      markDirty(false);
+      toast("Сохранено в файл");
+      return;
+    }catch(e){
+      if(e && e.name==="AbortError") return;
+    }
+  }
+  downloadHtml(html);
+  markDirty(false);
+  toast("Файл скачан");
+}
+
+document.getElementById("saveBtn").addEventListener("click", saveToFile);
+document.getElementById("exportBtn").addEventListener("click", ()=>{ downloadHtml(buildHtml()); markDirty(false); toast("Копия скачана"); });
+
+document.getElementById("importBtn").addEventListener("click", ()=> document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change", e=>{
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const txt = reader.result;
+      let data;
+      const m = txt.match(/const BAKED = ([\s\S]*?); \/\/ __BAKED_MARKER__/);
+      data = m ? JSON.parse(m[1]) : JSON.parse(txt);
+      const cnt = Object.keys(data.ratings||{}).length;
+      const when = data.updated ? " (от "+fmtDate(data.updated)+")" : "";
+      if(confirm("Загрузить данные из файла"+when+"?\nНайдено оценок: "+cnt+".\n\nТекущие данные в этом браузере будут заменены.")){
+        state = normalize(data);
+        state.mig1 = true;
+        lsSet(JSON.stringify(state));
+        editing = null; render(); markDirty(false); schedulePush();
+        toast("Данные загружены");
+      }
+    }catch(err){ alert("Не удалось прочитать файл: "+err.message); }
+    e.target.value = "";
+  };
+  reader.readAsText(file);
+});
+
+// ---- Меню «Ещё» (три точки) ----
+const moreToggle = document.getElementById("moreToggle");
+const moreMenu = document.getElementById("moreMenu");
+moreToggle.addEventListener("click", e=>{ e.stopPropagation(); moreMenu.classList.toggle("open"); });
+document.addEventListener("click", e=>{ if(!moreMenu.contains(e.target) && e.target!==moreToggle) moreMenu.classList.remove("open"); });
+moreMenu.querySelectorAll(".btn").forEach(b=> b.addEventListener("click", ()=> moreMenu.classList.remove("open")));
+
+// ---- Toast ----
+let toastTimer = null;
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg; el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove("show"), 1800);
+}
+
+// ---- Облачная синхронизация через GitHub Gist ----
+let syncToken = "", syncGistId = "", pushTimer = null;
+
+function syncConnected(){ return !!syncToken; }
+function setSyncStatus(m){ const el=document.getElementById("syncStatus"); if(el) el.textContent=m; }
+function stateForSync(){ return {ratings:state.ratings, custom:state.custom, deleted:state.deleted, edits:state.edits, authorEdits:state.authorEdits||{}, updated:state.updated||0}; }
+
+async function ghFetch(url, opts){
+  opts = opts || {};
+  opts.headers = Object.assign({
+    "Authorization":"Bearer "+syncToken,
+    "Accept":"application/vnd.github+json"
+  }, opts.headers||{});
+  const r = await fetch(url, opts);
+  if(!r.ok) throw new Error("GitHub "+r.status);
+  return r.json();
+}
+
+async function findGist(){
+  const list = await ghFetch("https://api.github.com/gists?per_page=100");
+  for(const g of list){ if(g.files && g.files["library.json"] && (g.description||"").toLowerCase().indexOf("библиотек")>=0) return g.id; }
+  for(const g of list){ if(g.files && g.files["library.json"]) return g.id; }
+  return "";
+}
+async function ensureGist(){
+  if(syncGistId) return syncGistId;
+  const g = await ghFetch("https://api.github.com/gists", {
+    method:"POST",
+    body: JSON.stringify({description:"Моя библиотека — синхронизация", public:false,
+      files:{"library.json":{content:JSON.stringify(stateForSync())}}})
+  });
+  syncGistId = g.id; lsRaw(SYNC_GIST_KEY, syncGistId);
+  return syncGistId;
+}
+async function pushSync(){
+  if(!syncConnected()) return;
+  try{
+    setSyncStatus("Сохранение в облако…");
+    await ensureGist();
+    await ghFetch("https://api.github.com/gists/"+syncGistId, {
+      method:"PATCH",
+      body: JSON.stringify({files:{"library.json":{content:JSON.stringify(stateForSync())}}})
+    });
+    setSyncStatus("Синхронизировано ✓ ("+fmtDate(Date.now())+")");
+  }catch(e){ setSyncStatus("Ошибка синхронизации: "+e.message); }
+}
+function schedulePush(){
+  if(!syncConnected()) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(pushSync, 1500);
+}
+async function pullPublic(){
+  const gid = syncGistId || PUBLIC_GIST_ID;
+  if(!gid) return;
+  try{
+    const r = await fetch("https://api.github.com/gists/"+gid, {headers:{"Accept":"application/vnd.github+json"}});
+    if(!r.ok) return;
+    const g = await r.json();
+    const f = g.files && g.files["library.json"];
+    if(!f) return;
+    let content = f.content;
+    if(f.truncated && f.raw_url){ content = await (await fetch(f.raw_url)).text(); }
+    const remote = JSON.parse(content);
+    if((remote.updated||0) > (state.updated||0)){
+      state = normalize(remote); state.mig1 = true;
+      lsSet(JSON.stringify(state));
+      editing = null; render(); markDirty(false);
+      setSyncStatus("Обновлено ✓");
+    }
+  }catch(e){}
+}
+async function pullSync(pushIfLocalNewer){
+  if(!syncConnected() || !syncGistId) return;
+  try{
+    setSyncStatus("Проверка облака…");
+    const g = await ghFetch("https://api.github.com/gists/"+syncGistId);
+    const f = g.files && g.files["library.json"];
+    if(!f){ setSyncStatus("В облаке пока пусто"); if(pushIfLocalNewer) pushSync(); return; }
+    const remote = JSON.parse(f.content);
+    if((remote.updated||0) > (state.updated||0)){
+      state = normalize(remote); state.mig1 = true;
+      lsSet(JSON.stringify(state));
+      editing = null; render(); markDirty(false);
+      setSyncStatus("Обновлено из облака ✓");
+    }else{
+      setSyncStatus("Синхронизировано ✓");
+      if(pushIfLocalNewer && (state.updated||0) > (remote.updated||0)) pushSync();
+    }
+  }catch(e){ setSyncStatus("Ошибка: "+e.message); }
+}
+async function connectSync(){
+  const inp = document.getElementById("syncTokenInput");
+  const t = inp.value.trim();
+  if(!t){ alert("Вставь ключ (токен) GitHub"); return; }
+  syncToken = t; lsRaw(SYNC_TOKEN_KEY, syncToken);
+  try{
+    setSyncStatus("Подключение…");
+    if(!syncGistId){ syncGistId = await findGist(); if(syncGistId) lsRaw(SYNC_GIST_KEY, syncGistId); }
+    if(syncGistId){ await pullSync(true); }
+    else { await ensureGist(); await pushSync(); }
+    updateSyncUI();
+    setSyncStatus("Подключено ✓");
+  }catch(e){
+    setSyncStatus("Не удалось подключиться: "+e.message+". Проверь ключ.");
+    syncToken=""; lsDelKey(SYNC_TOKEN_KEY);
+    updateSyncUI();
+  }
+}
+function disconnectSync(){
+  syncToken=""; lsDelKey(SYNC_TOKEN_KEY);
+  updateSyncUI(); setSyncStatus("Синхронизация отключена на этом устройстве");
+}
+function updateSyncUI(){
+  const on = syncConnected();
+  const b=document.getElementById("syncBadge"); if(b) b.style.display=on?"inline-block":"none";
+  const c=document.getElementById("syncConnectedBox"); if(c) c.style.display=on?"block":"none";
+  const d=document.getElementById("syncDisconnected"); if(d) d.style.display=on?"none":"block";
+  updateOwnerUI();
+  render();
+}
+function initSync(){
+  syncToken = lsGetRaw(SYNC_TOKEN_KEY);
+  syncGistId = lsGetRaw(SYNC_GIST_KEY) || PUBLIC_GIST_ID;
+  updateSyncUI();
+  document.getElementById("syncToggle").addEventListener("click", ()=>document.getElementById("syncPanel").classList.toggle("open"));
+  document.getElementById("syncConnectBtn").addEventListener("click", connectSync);
+  document.getElementById("syncCancelBtn").addEventListener("click", ()=>document.getElementById("syncPanel").classList.remove("open"));
+  document.getElementById("syncCloseBtn").addEventListener("click", ()=>document.getElementById("syncPanel").classList.remove("open"));
+  document.getElementById("syncNowBtn").addEventListener("click", ()=>pullSync(true));
+  document.getElementById("syncDisconnectBtn").addEventListener("click", disconnectSync);
+  if(syncConnected()) pullSync(false); else pullPublic();
+  window.addEventListener("focus", ()=>{ if(syncConnected()) pullSync(false); else pullPublic(); });
+}
+
+// ---- Иконка для «На экран Домой» (светлая книжка) ----
+function setIcon(url){
+  let l=document.querySelector('link[rel="apple-touch-icon"]'); if(!l){l=document.createElement("link");l.rel="apple-touch-icon";document.head.appendChild(l);} l.href=url;
+  let f=document.querySelector('link[rel="icon"]'); if(!f){f=document.createElement("link");f.rel="icon";document.head.appendChild(f);} f.href=url;
+}
+function makeIcon(){
+  try{
+    const svg='<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><defs><linearGradient id="cr" x1="0" y1="0" x2="0.15" y2="1"><stop offset="0" stop-color="#fdf3f5"/><stop offset=".55" stop-color="#f7e6ea"/><stop offset="1" stop-color="#f0d8de"/></linearGradient><radialGradient id="gl" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#fff8fb" stop-opacity=".7"/><stop offset="1" stop-color="#fff8fb" stop-opacity="0"/></radialGradient><linearGradient id="bk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e09fb6"/><stop offset="1" stop-color="#b5607e"/></linearGradient></defs><rect width="180" height="180" fill="url(#cr)"/><rect width="180" height="180" fill="url(#gl)"/><ellipse cx="90" cy="131" rx="50" ry="8" fill="#a85f7a" opacity=".16"/><path d="M90 63 C75 55 58 53 45 55 L45 116 C58 114 75 116 90 124 Z" fill="url(#bk)"/><path d="M90 63 C105 55 122 53 135 55 L135 116 C122 114 105 116 90 124 Z" fill="url(#bk)"/><path d="M90 63 V124" stroke="#8a4763" stroke-width="2.4" fill="none" stroke-linecap="round"/><g stroke="#fce8ee" stroke-width="1.5" stroke-linecap="round" opacity=".85"><path d="M55 70 C66 68 76 69 84 72"/><path d="M55 82 C66 80 76 81 84 84"/><path d="M55 94 C66 92 76 93 84 96"/><path d="M96 72 C104 69 114 68 125 70"/><path d="M96 84 C104 81 114 80 125 82"/><path d="M96 96 C104 93 114 92 125 94"/></g><path d="M90 63 C75 55 58 53 45 55 L45 116 C58 114 75 116 90 124 C105 116 122 114 135 116 L135 55 C122 53 105 55 90 63 Z" fill="none" stroke="#8a4763" stroke-width="1.4" stroke-linejoin="round" opacity=".55"/></svg>';
+    const uri="data:image/svg+xml,"+encodeURIComponent(svg);
+    const img=new Image();
+    img.onload=function(){ try{ const c=document.createElement("canvas"); c.width=c.height=180; c.getContext("2d").drawImage(img,0,0,180,180); setIcon(c.toDataURL("image/png")); }catch(e){ setIcon(uri); } };
+    img.onerror=function(){ setIcon(uri); };
+    img.src=uri;
+  }catch(e){}
+}
+
+searchEl.addEventListener("input",render);
+sortEl.addEventListener("change",render);
+document.getElementById("sortAuthors").addEventListener("change",render);
+
+markDirty(false);
+makeIcon();
+render();
+initSync();
+</script>
+</body></html>
