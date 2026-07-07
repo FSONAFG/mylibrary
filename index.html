@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Библиотека">
 <meta name="theme-color" content="#f7e6ea">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -864,7 +867,7 @@ function setIcon(url){
 }
 function makeIcon(){
   try{
-    const svg='<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><defs><linearGradient id="cr" x1="0" y1="0" x2="0.15" y2="1"><stop offset="0" stop-color="#fdf3f5"/><stop offset=".55" stop-color="#f7e6ea"/><stop offset="1" stop-color="#f0d8de"/></linearGradient><radialGradient id="gl" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#fff8fb" stop-opacity=".7"/><stop offset="1" stop-color="#fff8fb" stop-opacity="0"/></radialGradient><linearGradient id="bk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e09fb6"/><stop offset="1" stop-color="#b5607e"/></linearGradient></defs><rect width="180" height="180" fill="url(#cr)"/><rect width="180" height="180" fill="url(#gl)"/><ellipse cx="90" cy="131" rx="50" ry="8" fill="#a85f7a" opacity=".16"/><path d="M90 63 C75 55 58 53 45 55 L45 116 C58 114 75 116 90 124 Z" fill="url(#bk)"/><path d="M90 63 C105 55 122 53 135 55 L135 116 C122 114 105 116 90 124 Z" fill="url(#bk)"/><path d="M90 63 V124" stroke="#8a4763" stroke-width="2.4" fill="none" stroke-linecap="round"/><g stroke="#fce8ee" stroke-width="1.5" stroke-linecap="round" opacity=".85"><path d="M55 70 C66 68 76 69 84 72"/><path d="M55 82 C66 80 76 81 84 84"/><path d="M55 94 C66 92 76 93 84 96"/><path d="M96 72 C104 69 114 68 125 70"/><path d="M96 84 C104 81 114 80 125 82"/><path d="M96 96 C104 93 114 92 125 94"/></g><path d="M90 63 C75 55 58 53 45 55 L45 116 C58 114 75 116 90 124 C105 116 122 114 135 116 L135 55 C122 53 105 55 90 63 Z" fill="none" stroke="#8a4763" stroke-width="1.4" stroke-linejoin="round" opacity=".55"/></svg>';
+    const svg='<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><rect width="180" height="180" fill="#e9a4bf"/><ellipse cx="90" cy="131" rx="50" ry="8" fill="#8a4763" opacity=".16"/><path d="M90 63 C75 55 58 53 45 55 L45 116 C58 114 75 116 90 124 Z" fill="#fff4f8"/><path d="M90 63 C105 55 122 53 135 55 L135 116 C122 114 105 116 90 124 Z" fill="#fff4f8"/><path d="M90 63 V124" stroke="#c17a95" stroke-width="2.4" fill="none" stroke-linecap="round"/><g stroke="#e6a6c0" stroke-width="1.6" stroke-linecap="round"><path d="M55 71 C66 69 76 70 84 73"/><path d="M55 83 C66 81 76 82 84 85"/><path d="M55 95 C66 93 76 94 84 97"/><path d="M96 73 C104 70 114 69 125 71"/><path d="M96 85 C104 82 114 81 125 83"/><path d="M96 97 C104 94 114 93 125 95"/></g><path d="M90 63 C75 55 58 53 45 55 L45 116 C58 114 75 116 90 124 C105 116 122 114 135 116 L135 55 C122 53 105 55 90 63 Z" fill="none" stroke="#a1546f" stroke-width="1.5" stroke-linejoin="round" opacity=".55"/></svg>';
     const uri="data:image/svg+xml,"+encodeURIComponent(svg);
     const img=new Image();
     img.onload=function(){ try{ const c=document.createElement("canvas"); c.width=c.height=180; c.getContext("2d").drawImage(img,0,0,180,180); setIcon(c.toDataURL("image/png")); }catch(e){ setIcon(uri); } };
